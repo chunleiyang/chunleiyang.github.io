@@ -1,0 +1,33 @@
+# visit https://github.com/mojombo/jekyll/wiki/Configuration for more settings
+
+paginate: 10 # pagination based on number of posts
+paginate_path: "page:num"
+exclude: ["README.md"] # files to exclude
+highlighter: true
+markdown: kramdown
+
+
+defaults:
+  -
+    scope:
+      path: "" # empty string for all files
+    values:
+      title: "Chunle's Blog"
+
+description: Stylish Jekyll Theme
+author:
+  name: chunleiyang
+  email: yclhit@gmail.com
+  github: chunleiyang
+  twitter: chunleiyang
+  pinterest: yclhit
+  weibo: yclhit
+  linkedin: asd123
+  bio: Just Do It!
+  email_md5: 726351295ec82e145928582f595aa3aa
+
+rss_path: feed.xml
+categories_path: categories.html
+tags_path: tags.html
+
+BASE_PATH:
