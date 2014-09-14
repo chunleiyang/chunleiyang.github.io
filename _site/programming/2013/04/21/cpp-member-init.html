@@ -27,6 +27,7 @@
   <link rel="apple-touch-icon" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
   <link rel="apple-touch-icon" sizes="114x114" href="/assets/ico/apple-touch-icon-114-precomposed.png">
 	-->
+  <link rel="shortcut icon" href="/assets/ico/favicon.ico">
 
 	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
 </head>
@@ -181,99 +182,99 @@
 	  <div class="article_body">
 	  <p>  我们知道在C++里，对象的构造是有构造函数完成的，一般的，我们会在构造函数体内完成成员的初始化工作，像下面这样：  </p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">class X {
-    public:
-        X(int val) {
-            i = val;
-            j = i;
-        }
-    public:
-        int i;
-        int j;
-};</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">X</span> <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">X</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
+<span class="p">};</span></code></pre></div>
 
 <p>  这是比较简单的一种情况，也是最常用的一种方式，因为它没有涉及到有虚函数以及继承链里有虚基类的情况。在有虚函数的情况下，一般是编译器会在构造函数中（由编译器合成或者开发者提供）安插vptr指针，并妥当设置好它的值，使得它指向该类的虚函数表，虚函数表也是在编译期间完成的，这里不再展开细说。  </p>
 
 <p>  构造函数的另外一种语法就是本文的主题：<em>成员初始化列表</em> 。像下面这样：  </p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">class X {
-    public:
-        X(int val) : i(val), j(i) {}
-    public:
-        int i;
-        int j;
-};</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">X</span> <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">X</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">)</span> <span class="o">:</span> <span class="n">i</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">j</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
+<span class="p">};</span></code></pre></div>
 
 <p>  成员初始化列表并不是一种函数调用，初始化成员的次序非常讲究，编译器真正初始化成员的顺序是它们在类中申明的次序，而并不是列在成员初始化列表里的顺序，上面的示例没有任何问题，咱们再来看另外一种情况，你会得到一个怪异的结果：</p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">class X {
-    public:
-        X(int val) j(i), (val) {}
-    public:
-        int i;
-        int j;
-};</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">X</span> <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">X</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">)</span> <span class="n">j</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="p">{}</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
+<span class="p">};</span></code></pre></div>
 
 <p>  看出区别了吗？成员初始化列表里面的次序发生了变化，我们来简单的测试一下到底有什么不同：</p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;iostream&gt;</span>
     
-using std::cout;
-using std::endl;
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-class X {
-    public:
-        X(int val):i(val),j(i){}
-    public:
-        int i;
-        int j;
-};
+<span class="k">class</span> <span class="nc">X</span> <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">X</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">)</span><span class="o">:</span><span class="n">i</span><span class="p">(</span><span class="n">val</span><span class="p">),</span><span class="n">j</span><span class="p">(</span><span class="n">i</span><span class="p">){}</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
+<span class="p">};</span>
     
-int main() {
-    X x(100);
-    cout &lt;&lt; x.i &lt;&lt; endl &lt;&lt; x.j &lt;&lt; endl;
-    return 0;
-}</code></pre></div>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">X</span> <span class="n">x</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
 
 <p>  输出结果：</p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">100
-100</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="mi">100</span>
+<span class="mi">100</span></code></pre></div>
 
 <p>   再来看后一种情况：  </p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;iostream&gt;</span>
     
-using std::cout;
-using std::endl;
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
     
-class X {
-    public:
-        X(int val):j(val),i(j){}
-    public:
-        int i;
-        int j;
-};
+<span class="k">class</span> <span class="nc">X</span> <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">X</span><span class="p">(</span><span class="kt">int</span> <span class="n">val</span><span class="p">)</span><span class="o">:</span><span class="n">j</span><span class="p">(</span><span class="n">val</span><span class="p">),</span><span class="n">i</span><span class="p">(</span><span class="n">j</span><span class="p">){}</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
+<span class="p">};</span>
     
-int main() {
-    X x(100);
-    cout &lt;&lt; x.i &lt;&lt; endl &lt;&lt; x.j &lt;&lt; endl;
-    return 0;
-}</code></pre></div>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">X</span> <span class="n">x</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
 
 <p>   输出结果：</p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">10653684
-100</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="mi">10653684</span>
+<span class="mi">100</span></code></pre></div>
 
 <p>  显然这不是我们想要的结果，这是因为，编译器是按照申明次序来初始化的，所以先初始化i，这时候j是未初始化过的，因此得到的是脏数据。gcc／g++能对这种情况给出warning，像下面这样：</p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">g++ -c -Wall -O3 hello.cpp -o hello.o
-hello.cpp: In constructor &#39;X::X(int)&#39;:
-hello.cpp:12: warning: &#39;X::j&#39; will be initialized after
-hello.cpp:11: warning:   &#39;int X::i&#39;
-hello.cpp:9: warning:   when initialized here
-g++ -o hello hello.o</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">c</span> <span class="o">-</span><span class="n">Wall</span> <span class="o">-</span><span class="n">O3</span> <span class="n">hello</span><span class="p">.</span><span class="n">cpp</span> <span class="o">-</span><span class="n">o</span> <span class="n">hello</span><span class="p">.</span><span class="n">o</span>
+<span class="n">hello</span><span class="p">.</span><span class="nl">cpp</span><span class="p">:</span> <span class="n">In</span> <span class="n">constructor</span> <span class="err">&#39;</span><span class="n">X</span><span class="o">::</span><span class="n">X</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="err">&#39;</span><span class="o">:</span>
+<span class="n">hello</span><span class="p">.</span><span class="nl">cpp</span><span class="p">:</span><span class="mi">12</span><span class="o">:</span> <span class="nl">warning</span><span class="p">:</span> <span class="err">&#39;</span><span class="n">X</span><span class="o">::</span><span class="n">j</span><span class="err">&#39;</span> <span class="n">will</span> <span class="n">be</span> <span class="n">initialized</span> <span class="n">after</span>
+<span class="n">hello</span><span class="p">.</span><span class="nl">cpp</span><span class="p">:</span><span class="mi">11</span><span class="o">:</span> <span class="nl">warning</span><span class="p">:</span>   <span class="err">&#39;</span><span class="kt">int</span> <span class="n">X</span><span class="o">::</span><span class="n">i</span><span class="err">&#39;</span>
+<span class="n">hello</span><span class="p">.</span><span class="nl">cpp</span><span class="p">:</span><span class="mi">9</span><span class="o">:</span> <span class="nl">warning</span><span class="p">:</span>   <span class="n">when</span> <span class="n">initialized</span> <span class="n">here</span>
+<span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">o</span> <span class="n">hello</span> <span class="n">hello</span><span class="p">.</span><span class="n">o</span></code></pre></div>
 
 <p>  如果没有对成员初始化列表有这样的理解，这样的警告会让人很困惑，另外，下面四种情况下是必须要用成员初始化列表的语法来初始化成员的：</p>
 
@@ -286,42 +287,42 @@ g++ -o hello hello.o</code></pre></div>
 
 <p>  最后一点，当成员都是基本类型时，两种构造方法在效率上没有任何区别，当成员有class对象时，情况就不一样，在构造函数体中通过赋值运算符＝进行初始化时，会产生临时对象，在用成员初始化列表进行构造时，会直接调用class成员的copy构造函数，效率上会有所提升，不过现在的编译器会做何种优化也视不同的编译器而异。举个例子：</p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">class Word {
-    public;
-        Word(){name=0;cnt=0;}
-    public:
-        string name;
-        int cnt;
-};</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Word</span> <span class="p">{</span>
+    <span class="k">public</span><span class="p">;</span>
+        <span class="n">Word</span><span class="p">(){</span><span class="n">name</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">cnt</span><span class="o">=</span><span class="mi">0</span><span class="p">;}</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">cnt</span><span class="p">;</span>
+<span class="p">};</span></code></pre></div>
 
 <p>  编译器对构造函数可能做的扩张如下：  </p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">Word::Word() {
-    name.string::String();
-    string temp = string(0);
-    name.string::operator=(temp);
-    temp.string::~string();
-    cnt=0
-}</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">Word</span><span class="o">::</span><span class="n">Word</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">.</span><span class="n">string</span><span class="o">::</span><span class="n">String</span><span class="p">();</span>
+    <span class="n">string</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">string</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">name</span><span class="p">.</span><span class="n">string</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+    <span class="n">temp</span><span class="p">.</span><span class="n">string</span><span class="o">::~</span><span class="n">string</span><span class="p">();</span>
+    <span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">}</span></code></pre></div>
 
 <p>   另外一个例子：  </p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">class Word {
-    public:
-        Word():name(0) {
-            cnt=0;
-        }
-    public:
-        string name;
-        int cnt;
-};</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">class</span> <span class="nc">Word</span> <span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">Word</span><span class="p">()</span><span class="o">:</span><span class="n">name</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">cnt</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">cnt</span><span class="p">;</span>
+<span class="p">};</span></code></pre></div>
 
 <p>   编译器对构造函数做对扩展可能如下：  </p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">Word::Word() {
-    name.string::string(0);
-    cnt = 0;
-}</code></pre></div>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">Word</span><span class="o">::</span><span class="n">Word</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">.</span><span class="n">string</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
 
 <p>   完！</p>
 

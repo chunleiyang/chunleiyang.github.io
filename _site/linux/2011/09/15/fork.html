@@ -27,6 +27,7 @@
   <link rel="apple-touch-icon" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
   <link rel="apple-touch-icon" sizes="114x114" href="/assets/ico/apple-touch-icon-114-precomposed.png">
 	-->
+  <link rel="shortcut icon" href="/assets/ico/favicon.ico">
 
 	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
 </head>
@@ -181,24 +182,24 @@
 	  <div class="article_body">
 	  <p>  直接看代码：  </p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">#include &lt;unistd.h&gt;
-#include &lt;sys/types.h&gt;
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp">#include &lt;unistd.h&gt;</span>
+<span class="cp">#include &lt;sys/types.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
 
-int main (void) {
-    pid_t pid;
-    pid=fork();
+<span class="kt">int</span> <span class="nf">main</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">pid_t</span> <span class="n">pid</span><span class="p">;</span>
+    <span class="n">pid</span><span class="o">=</span><span class="n">fork</span><span class="p">();</span>
     
-    if (pid &lt; 0)
-        printf(&quot;error in fork!&quot;);
-    else if (pid == 0)
-        printf(&quot;i am the child process, my process id is %dn&quot;,getpid());
-    else
-        printf(&quot;i am the parent process, my process id is %dn&quot;,getpid());
+    <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;error in fork!&quot;</span><span class="p">);</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">pid</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;i am the child process, my process id is %dn&quot;</span><span class="p">,</span><span class="n">getpid</span><span class="p">());</span>
+    <span class="k">else</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">&quot;i am the parent process, my process id is %dn&quot;</span><span class="p">,</span><span class="n">getpid</span><span class="p">());</span>
     
-    return 0;
-}</code></pre></div>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
 
 <p>  执行结果是：  </p>
 

@@ -27,6 +27,7 @@
   <link rel="apple-touch-icon" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
   <link rel="apple-touch-icon" sizes="114x114" href="/assets/ico/apple-touch-icon-114-precomposed.png">
 	-->
+  <link rel="shortcut icon" href="/assets/ico/favicon.ico">
 
 	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
 </head>
@@ -181,14 +182,14 @@
 	  <div class="article_body">
 	  <p>  今天做项目的时候碰到一个问题，就是要去遍历系统的所有进程，然后获取每个进程的镜像全路径，进而对其做一些非破坏性的处理，然后在用<code>_tfopen_s</code>以二进制读模式打开的时候，发现在64位vista和64位win7上某些文件访问不到，比如“C:\Windows\System32\smss.exe”，还有好多，这里就不在一一列举了。然后我就很郁闷是不是库函数在64位下出了什么问题，然后改用系统函数<code>CreateFile</code>以共享读模式打开文件，结果还是一样，没有任何改变，再<code>GetLastError</code>了一下，返回值为2，也就是找不到指定的文件，但是该文件确实存在啊，怎么会这样呢，然后就是各种查查查，后来看到<code>Wow64DisableWow64FsRedirection</code>，试了一下就好使了，具体用法如下：  </p>
 
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp">typedef BOOL (WINAPI * WDWFD)(_Out_  PVOID);
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="k">typedef</span> <span class="nf">BOOL</span> <span class="p">(</span><span class="n">WINAPI</span> <span class="o">*</span> <span class="n">WDWFD</span><span class="p">)(</span><span class="n">_Out_</span>  <span class="n">PVOID</span><span class="p">);</span>
     
-WDWFD pWdwfd = (WDWFD)GetProcAddress(GetModuleHandle(_T(&quot;Kernel32.dll&quot;)),&quot;Wow64DisableWow64FsRedirection&quot;);
+<span class="n">WDWFD</span> <span class="n">pWdwfd</span> <span class="o">=</span> <span class="p">(</span><span class="n">WDWFD</span><span class="p">)</span><span class="n">GetProcAddress</span><span class="p">(</span><span class="n">GetModuleHandle</span><span class="p">(</span><span class="n">_T</span><span class="p">(</span><span class="s">&quot;Kernel32.dll&quot;</span><span class="p">)),</span><span class="s">&quot;Wow64DisableWow64FsRedirection&quot;</span><span class="p">);</span>
 
-if (pWdwfd!=NULL)
-{
-    pWdwfd(NULL);
-}</code></pre></div>
+<span class="k">if</span> <span class="p">(</span><span class="n">pWdwfd</span><span class="o">!=</span><span class="nb">NULL</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">pWdwfd</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
 
 <p>  在你需要打开文件的前面加上上述代码，OK，不管是32位机器还是64位机器就都好使了。</p>
 
