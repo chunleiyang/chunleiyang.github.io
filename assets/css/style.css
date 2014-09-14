@@ -26,6 +26,33 @@ body{
 	color: #fff;
 }
 
+.sidebar .category ul {
+      list-style: none;
+      margin: 40px 40px;
+      -webkit-padding-start: 0px; }
+      .sidebar .category ul li {
+        border-bottom: 1px solid #aaaaaa;
+        height: 40px; }
+        .sidebar .category ul li a {
+          display: block;
+          line-height: 40px;
+          text-decoration: none;
+          color: #aaaaaa;
+          width: 100%; }
+          .sidebar .category ul li a:hover, .sidebar .category ul li a:focus {
+            color: #fff; }
+            .sidebar .category ul li a:hover span, .sidebar .category ul li a:focus span {
+              border: 1px solid #fff; }
+          .sidebar .category ul li a span {
+            display: inline-block;
+            float: right;
+            border: 1px solid #aaaaaa;
+            border-radius: 15px 15px 15px 15px;
+            padding: 0px 8px;
+            line-height: 20px;
+            margin-top: 10px; }
+
+
 a.nav-link {
 	padding-bottom: 5px;
 	padding-top: 7px;
