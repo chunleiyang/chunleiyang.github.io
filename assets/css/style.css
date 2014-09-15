@@ -86,6 +86,12 @@ article .share .twitter:hover {
 #contact-list li:hover .fa-linkedin {
 	color: #1D87BD;
 }
+#contact-list li:hover .fa-github {
+	color: #E93E30;
+}
+#contact-list li:hover .fa-weibo {
+	color: #E93E30;
+}
 #contact-list li:hover .fa-envelope {
 	color: #E93E30;
 }
